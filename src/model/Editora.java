@@ -29,6 +29,10 @@ public class Editora {
         this.gerente = gerente;
     }
 
+    public Editora(int idEditora, String nomeEditora, String cnpj, String endereco, String telefone) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     public int getIdEditora() {
         return idEditora;
     }

@@ -39,6 +39,18 @@ public class Livraria {
         return num;
     }
 
+    public static float leiaNumFloat() {
+        Scanner leiaNum = new Scanner(System.in);
+        float num = 99;
+        try {
+            num = leia.nextFloat();
+        } catch (Exception e) {
+            System.out.println("Tente novamente");
+            leia.nextLine();
+        }
+        return num;
+    }
+
     public static void menuP() {
         System.out.println("--: Livraria :--");
         System.out.println("1 - Gerenciar Clientes");
@@ -341,25 +353,53 @@ public class Livraria {
             System.out.print("Informe o estoque: ");
             int estoque = leiaNumInt();
             System.out.println("Informe o preço: ");
-            float preco = leia.nextFloat();
+            float preco = leiaNumFloat();
             boolean isCNPJ = false;
             Editora idEditora = null;
-            do{
+            do {
                 System.out.print("Informe o CNPJ da editora: ");
                 String cnpj = leia.nextLine();
-                        isCNPJ = Validadores.isCNPJ(cnpj);
-                        if(isCNPJ){
-                            idEditora = cadEditora.getEditoraCnpj(cnpj);
-                            if(idEditora == null){
-                                System.out.println("Editora sob este CNPJ não cadastrada. ");
-                            }
-                        }else{
-                            System.out.println("CNPJ inválido. ");
-                        }
-            }while(isCNPJ);
+                isCNPJ = Validadores.isCNPJ(cnpj);
+                if (isCNPJ) {
+                    idEditora = cadEditora.getEditoraCnpj(cnpj);
+                    if (idEditora == null) {
+                        System.out.println("Editora sob este CNPJ não cadastrada. ");
+                    } else {
+                        System.out.println("Editora: " + idEditora.getNomeEditora());
+                    }
+                } else {
+                    System.out.println("CNPJ inválido. ");
+                }
+            } while (isCNPJ);
             Livro li = new Livro(idLivro, titulo, autor, assunto, isbn, estoque, preco, idEditora);
             cadLivro.addLivro(li);
             System.out.println("Livro cadastrado com sucesso");
+        }
+    }
+
+    private static void listarLivro() {
+        System.out.println("--Listar Livros--");
+        for (Livro livro : cadLivro.getlivros()) {
+            System.out.println("ISBN:\t" + livro.getIsbn());
+            System.out.println("Titulo:\t" + livro.getTitulo());
+            System.out.println("Assunto:\t" + livro.getAssunto());
+            System.out.println("Autor:\t" + livro.getAutor());
+            System.out.println("Estoque:\t" + livro.getEstoque());
+            System.out.println("Preço:\t" + livro.getPreco());
+            System.out.println("Editora:\t" + livro.getIdEditora().getNomeEditora());
+        }
+    }
+
+    private static void deletarLivro() {
+        System.out.println("Deletar Livro");
+        System.out.print("Informe o ISBN: ");
+        String isbn = leia.next();
+        Livro li = cadLivro.getLivroISBN(isbn);
+        if (li != null) {
+            cadLivro.removelivro(li);
+            System.out.println("Livro deletado com sucesso!");
+        } else {
+            System.out.println("Livro não consta na base de dados.");
         }
     }
 
@@ -453,11 +493,4 @@ public class Livraria {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    private static void listarLivro() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    private static void deletarLivro() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

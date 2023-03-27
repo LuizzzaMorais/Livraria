@@ -11,10 +11,13 @@ import controller.CCliente;
 import controller.CEditora;
 import controller.CLivro;
 import controller.CVendaLivro;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Scanner;
 import model.Cliente;
 import model.Editora;
 import model.Livro;
+import model.VendaLivro;
 
 /**
  *
@@ -72,6 +75,9 @@ public class Livraria {
                 break;
             case 3:
                 tpCad = "Livro";
+                break;
+            case 4:
+                tpCad = "Venda";
                 break;
 
         }
@@ -403,6 +409,110 @@ public class Livraria {
         }
     }
 
+    private static void editarLivro() {
+        System.out.println("-- Editar Livro --");
+        System.out.println("Informe o ISBN:");
+        String isbn = leia.next();
+        Livro li = cadLivro.getLivroISBN(isbn);
+        if (li != null) {
+            System.out.println("1 - Titulo:\t" + li.getTitulo());
+            System.out.println("2 - Assunto:\t" + li.getAssunto());
+            System.out.println("3 - Autor:\t" + li.getAutor());
+            System.out.println("4 - Preço:\t" + li.getPreco());
+            System.out.println("5 - Todos os campos acima");
+            System.out.print("Qual campo deseja alterar?" + "\nDigite aqui: ");
+            int opEditar = leiaNumInt();
+            switch (opEditar) {
+                case 1:
+                    System.out.print("Informe o titulo a ser alterado: ");
+                    li.setTitulo(leia.nextLine());
+                    break;
+                case 2:
+                    System.out.print("Informe o assunto a ser alterado: ");
+                    li.setAssunto(leia.nextLine());
+                    break;
+                case 3:
+                    System.out.print("Informe o autor a ser alterado: ");
+                    li.setAutor(leia.nextLine());
+                    break;
+                case 4:
+                    System.out.print("Informe o preço a ser alterado: ");
+                    li.setPreco(leia.nextFloat());
+                    break;
+                case 5:
+                    System.out.print("Informe todos os campos abaixo: ");
+                    System.out.print("Informe o titulo a ser alterado: ");
+                    li.setTitulo(leia.nextLine());
+                    System.out.print("Informe o assunto a ser alterado: ");
+                    li.setAssunto(leia.nextLine());
+                    System.out.print("Informe o autor a ser alterado: ");
+                    li.setAutor(leia.nextLine());
+                    System.out.print("Informe o preço a ser alterado: ");
+                    li.setPreco(leia.nextFloat());
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
+                    break;
+            }
+            System.out.println("Cliente:\n" + li.toString());
+        } else {
+            System.out.println("Livro não cadastrado na base de dados.");
+        }
+    }
+
+    private static void vendaLivro() {
+        int idVendaLivro;
+        Cliente idCliente = null;
+        ArrayList<Livro> livros = new ArrayList<>();
+        float subTotal = 0;
+        LocalDate dataVenda = LocalDate.now();
+
+        do {
+            System.out.print("Informe o CPF do cliente: ");
+            String CPF = leia.next();
+            if (Validadores.isCPF(CPF)) {
+                idCliente = cadCliente.getClienteCPF(CPF);
+                if (idCliente == null) {
+                    System.out.println("Cliente não cadastrado, tente novamente.");
+                }
+            } else {
+                System.out.println("CPF inválido.");
+            }
+        } while (idCliente == null);
+
+        boolean venda = true;
+        do {
+            Livro li = null;
+            String isbn;
+            do {
+                System.out.print("Informe o ISBN: ");
+                isbn = leia.next();
+                li = cadLivro.getLivroISBN(isbn);
+                if (li == null) {
+                    System.out.println("Livro não encontrado, tente novamente.");
+
+                }
+
+            } while (li == null);
+            if(li.getEstoque()>0){
+                livros.add(li);
+                cadLivro.atualizaEstoqueLivro(li.getIsbn());
+                subTotal += li.getPreco();
+            }else{
+                System.out.println(li.getTitulo() + "não tem estoque");
+            }
+            System.out.println("O seu pedido até agora tem o valor total de R$" + subTotal + ".");
+            System.out.print("Deseja comprar mais livros nesta venda?" + "\n1 - Sim | 2 - Não" + "\nDigite: ");
+            if (leiaNumInt() == 2) {
+                venda = false;
+            }
+        } while (venda);
+        idVendaLivro = cadVendaLivro.geraID();
+        VendaLivro vl = new VendaLivro(idVendaLivro, idCliente, livros, subTotal, dataVenda);
+        cadVendaLivro.addVendaLivro(vl);
+        System.out.println("--Venda--\n" + vl.toString());
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -436,7 +546,7 @@ public class Livraria {
                                     cadEditora();
                                 } else if (opM == 3) {
                                     cadLivro();
-                                }
+                                } 
                                 break;
                             case 2:
                                 System.out.println("-- Editar --");
@@ -480,6 +590,8 @@ public class Livraria {
                     break;
                 case 4:
                     System.out.println("--Venda Livro--");
+                    vendaLivro();
+                    break;        
                 case 0:
                     System.out.println("Aplicação encerrada pelo usuário.");
                     break;
@@ -487,10 +599,6 @@ public class Livraria {
                     System.out.println("Opção inváldida, tente novamente.");
             }
         } while (opM != 0);
-    }
-
-    private static void editarLivro() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

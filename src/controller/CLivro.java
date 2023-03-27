@@ -37,17 +37,36 @@ public class CLivro {
     }
 
     public void mocklivros() {
-        CEditora ed = new CEditora();
         Livro l1 = new Livro();
         l1.setIdLivro(this.geraID());
         l1.setTitulo("Os Sete Maridos de Evelyn Hugo");
         l1.setAutor("Taylor Jenkins Reid");
         l1.setAssunto("Romance");
-        l1.setIsbn("5199398292");
+        l1.setIsbn("123");
         l1.setEstoque(10);
         l1.setPreco((float) 50.55);
-        l1.setIdEditora(Livraria.cadEditora.getEditoraCnpj("10000000000"));
+        l1.setIdEditora(Livraria.cadEditora.getEditoraCnpj("22150710000130"));
         this.addLivro(l1);
+        Livro l2 = new Livro();
+        l2.setIdLivro(this.geraID());
+        l2.setTitulo("Harry Potter e a Pedra Filosofal");
+        l2.setAutor("J.K. Rowling");
+        l2.setAssunto("Ficção Aventura");
+        l2.setIsbn("321");
+        l2.setEstoque(20);
+        l2.setPreco((float) 40.50);
+        l2.setIdEditora(Livraria.cadEditora.getEditoraCnpj("22150710000130"));
+        this.addLivro(l2);
+        Livro l3 = new Livro();
+        l3.setIdLivro(this.geraID());
+        l3.setTitulo("Pequeno Principe");
+        l3.setAutor("Antoine de Saint");
+        l3.setAssunto("Ludico");
+        l3.setIsbn("312");
+        l3.setEstoque(15);
+        l3.setPreco((float) 19.90);
+        l3.setIdEditora(Livraria.cadEditora.getEditoraCnpj("77860014000100"));
+        this.addLivro(l3);
     }
 
     public Livro getLivroISBN(String isbn) {

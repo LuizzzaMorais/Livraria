@@ -83,7 +83,7 @@ public class Editora {
 
     @Override
     public String toString() {
-        return "editora{" + "idEditora=" + idEditora + ", nomeEditora=" + nomeEditora + ", cnpj=" + cnpj + ", endereco=" + endereco + ", telefone=" + telefone + ", gerente=" + gerente + '}';
+        return "\nEditora:" +  "\nNome: " + nomeEditora + "\nCNPJ: " + cnpj + "\nEndereço: " + endereco + "\nTelefone: " + telefone + "\nGerente: " + gerente;
     }
     
     
